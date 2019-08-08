@@ -13,6 +13,11 @@ const widgets: IWidget[] = [
     id: 1,
     label: "first widget",
   },
+  {
+    color: "blue",
+    id: 2,
+    label: "first widget",
+  },
 ];
 
 @Route("widgets")

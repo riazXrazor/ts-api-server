@@ -4,11 +4,13 @@ import express from "express";
 import http from "http";
 import methodOverride from "method-override";
 import swaggerUi from "swagger-ui-express";
-import "./controllers/widgets-controller";
+
+import "./controllerImport";
+
+// @ts-ignore
+import * as swaggerDocument from "./dist/swagger.json";
 import { RegisterRoutes } from "./routes";
 import { log } from "./utils/log";
-/* tslint:disable */
-import * as swaggerDocument from "./dist/swagger.json";
 
 export const server = () => {
   const app = express()

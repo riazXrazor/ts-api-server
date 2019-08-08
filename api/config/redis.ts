@@ -1,7 +1,10 @@
 import Redis from "ioredis";
 
+const { REDIS_PORT, REDIS_HOST } = process.env;
+
 const createClient = () => {
-  return new Redis(6379, "localhost", {});
+  // @ts-ignore
+  return new Redis(REDIS_PORT, REDIS_HOST, {});
 };
 
 const clients: { [key: string]: Redis.Redis | undefined } = {};
@@ -11,7 +14,7 @@ export const getRedisClient = (key = "default") => {
   if (!client) {
     client = clients[key] = createClient();
   }
-
+  // @ts-ignore
   client.setMaxListeners(100);
 
   return client;

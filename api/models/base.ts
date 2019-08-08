@@ -11,11 +11,11 @@ export class BaseEntity {
    * Date of creation
    */
   @Column("timestamp")
-  public dateCreated!: Date;
+  public createdAt!: Date;
 
   /**
    * Date of updated
    */
   @Column("timestamp")
-  public dateUpdated!: Date;
+  public updatedAt!: Date;
 }
