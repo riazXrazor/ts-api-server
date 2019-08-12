@@ -1,6 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
-
-export class BaseEntity {
+import { BaseEntity, Column, PrimaryGeneratedColumn } from "typeorm";
+export class BaseModal extends BaseEntity {
   /**
    * Unique Identifier
    */
@@ -11,11 +10,11 @@ export class BaseEntity {
    * Date of creation
    */
   @Column("timestamp")
-  public createdAt!: Date;
+  public created_at!: Date;
 
   /**
    * Date of updated
    */
   @Column("timestamp")
-  public updatedAt!: Date;
+  public updated_at!: Date;
 }

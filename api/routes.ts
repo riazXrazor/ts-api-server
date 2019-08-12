@@ -1,21 +1,18 @@
 /* tslint:disable */
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { UsersController } from './controllers/users.controller';
-import { WidgetsController } from './controllers/widgets.controller';
 import * as express from 'express';
 
 const models: TsoaRoute.Models = {
-  "IUser": {
+  "User": {
     "properties": {
+      "target": { "dataType": "object", "required": true },
       "id": { "dataType": "double", "required": true },
-      "name": { "dataType": "string", "required": true },
-    },
-  },
-  "IWidget": {
-    "properties": {
-      "id": { "dataType": "double", "required": true },
-      "label": { "dataType": "string", "required": true },
-      "color": { "dataType": "string", "required": true },
+      "created_at": { "dataType": "datetime", "required": true },
+      "updated_at": { "dataType": "datetime", "required": true },
+      "email": { "dataType": "string", "required": true },
+      "first_name": { "dataType": "string", "required": true },
+      "last_name": { "dataType": "string", "required": true },
     },
   },
 };
@@ -38,62 +35,6 @@ export function RegisterRoutes(app: express.Express) {
 
 
       const promise = controller.GetUsers.apply(controller, validatedArgs as any);
-      promiseHandler(controller, promise, response, next);
-    });
-  app.get('/api/users/:userId',
-    function(request: any, response: any, next: any) {
-      const args = {
-        userId: { "in": "path", "name": "userId", "required": true, "dataType": "double" },
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new UsersController();
-
-
-      const promise = controller.GetUser.apply(controller, validatedArgs as any);
-      promiseHandler(controller, promise, response, next);
-    });
-  app.get('/api/widgets',
-    function(request: any, response: any, next: any) {
-      const args = {
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new WidgetsController();
-
-
-      const promise = controller.GetWidgets.apply(controller, validatedArgs as any);
-      promiseHandler(controller, promise, response, next);
-    });
-  app.get('/api/widgets/:widgetId',
-    function(request: any, response: any, next: any) {
-      const args = {
-        widgetId: { "in": "path", "name": "widgetId", "required": true, "dataType": "double" },
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new WidgetsController();
-
-
-      const promise = controller.GetWidget.apply(controller, validatedArgs as any);
       promiseHandler(controller, promise, response, next);
     });
 

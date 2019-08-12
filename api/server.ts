@@ -8,9 +8,9 @@ import swaggerUi from "swagger-ui-express";
 import "./controllerImport";
 
 // @ts-ignore
+import { log } from "#utils/log";
 import * as swaggerDocument from "./dist/swagger.json";
 import { RegisterRoutes } from "./routes";
-import { log } from "./utils/log";
 
 export const server = () => {
   const app = express()

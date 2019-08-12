@@ -2,8 +2,10 @@
   "extends": "tslint:latest",
   "rules": {
     "variable-name": {
-      "options": "allow-leading-underscore"
+      "options": ["allow-leading-underscore",
+                  "allow-snake-case"]
     },
-    "no-implicit-dependencies": false
+    "no-implicit-dependencies": false,
+    "no-submodule-imports": false
   }
 }
