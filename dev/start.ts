@@ -1,3 +1,4 @@
+import { initializeDbConnection } from "#config/database";
 import chokidar from "chokidar";
 import dotenv from "dotenv";
 import { createControllerImporter } from "./steps/controller-imports";
@@ -6,7 +7,6 @@ import { generateExpressRoutes } from "./steps/gen-routes";
 import { registerQuitKey } from "./steps/register-quit-key";
 import { startApi } from "./steps/start-api";
 import { debounce } from "./utils/debounce";
-
 /**
  * Single to run API server and regenerate route-related content
  */
@@ -17,7 +17,10 @@ createControllerImporter();
 (async () => {
   await Promise.all([
     genClient(),
-    generateExpressRoutes().then(() => startApi()),
+    generateExpressRoutes().then(async () => {
+        await startApi();
+        await initializeDbConnection();
+    }),
   ]);
 
   const regenerateApiRoutes = debounce(async (args) => {
@@ -30,6 +33,7 @@ createControllerImporter();
       await Promise.all([genClient(), generateExpressRoutes()]);
     } else {
       await startApi();
+      await initializeDbConnection();
     }
   }, 100);
 

@@ -15,6 +15,13 @@ const models: TsoaRoute.Models = {
       "last_name": { "dataType": "string", "required": true },
     },
   },
+  "IUser": {
+    "properties": {
+      "first_name": { "dataType": "string", "required": true },
+      "last_name": { "dataType": "string", "required": true },
+      "email": { "dataType": "string", "required": true },
+    },
+  },
 };
 const validationService = new ValidationService(models);
 
@@ -35,6 +42,44 @@ export function RegisterRoutes(app: express.Express) {
 
 
       const promise = controller.GetUsers.apply(controller, validatedArgs as any);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.post('/api/users',
+    function(request: any, response: any, next: any) {
+      const args = {
+        requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IUser" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UsersController();
+
+
+      const promise = controller.createUser.apply(controller, validatedArgs as any);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/api/users/:userId',
+    function(request: any, response: any, next: any) {
+      const args = {
+        userId: { "in": "path", "name": "userId", "required": true, "dataType": "double" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UsersController();
+
+
+      const promise = controller.GetUser.apply(controller, validatedArgs as any);
       promiseHandler(controller, promise, response, next);
     });
 

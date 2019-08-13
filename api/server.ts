@@ -5,14 +5,18 @@ import http from "http";
 import methodOverride from "method-override";
 import swaggerUi from "swagger-ui-express";
 
-import "./controllerImport";
-
 // @ts-ignore
+import { initializeDbConnection } from "#config/database";
 import { log } from "#utils/log";
+import "./controllerImport";
 import * as swaggerDocument from "./dist/swagger.json";
 import { RegisterRoutes } from "./routes";
 
-export const server = () => {
+(async () => {
+  await initializeDbConnection();
+})();
+
+export const server = async () => {
   const app = express()
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
