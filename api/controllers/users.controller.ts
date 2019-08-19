@@ -6,16 +6,27 @@ import { ServerError } from "#utils/server-error";
 import { Body, Get, Post, Route, SuccessResponse, Tags } from "tsoa";
 import v from "node-input-validator";
 // @ts-ignore
-function validate(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<any>) {
-  const method = descriptor.value
-  descriptor.value = function(){
-    const context = this;
-    const arg = arguments;
-    let validator = new v(arg, {name:'required|email'});
-    validator.check().then(function (matched: any) {
-      console.log("valio",matched,validator.errors);  
-    });
-    method.apply(context,arg);
+
+
+function validate(rules: any){
+  return function (_target: any, _propertyName: string, descriptor: TypedPropertyDescriptor<any>) {
+    const method = descriptor.value
+    let result = Reflect.getMetadataKeys(_target);
+    console.log(result)
+    descriptor.value = function(){
+      const context = this;
+      const arg = arguments;
+      let validator = new v(arg[0],rules);
+      return validator.check().then(function (matched: any) {
+        // console.log("valio",target,propertyName,method); 
+        if(matched){
+          method.apply(context,arg, method);
+        } else {
+          return validator.errors
+        }
+      });
+     
+    }
   }
 }
 
@@ -36,12 +47,16 @@ export class UsersController extends Controller {
   @SuccessResponse("201", "Created")
   @Post()
   @Tags("Users")
-  @validate
-  public async createUser(@Body() requestBody: IUser): Promise<User> {
+  @validate({
+    first_name: 'required',
+    last_name: 'required',
+    email: 'required|email'
+  })
+  public async createUser(@Body() createUser: IUser): Promise<User> {
       const user = new User();
-      user.first_name = requestBody.first_name;
-      user.last_name = requestBody.last_name;
-      user.email = requestBody.email;
+      user.first_name = createUser.first_name;
+      user.last_name = createUser.last_name;
+      user.email = createUser.email;
       //user.save();
       return user;
   }

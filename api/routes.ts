@@ -47,7 +47,7 @@ export function RegisterRoutes(app: express.Express) {
   app.post('/api/users',
     function(request: any, response: any, next: any) {
       const args = {
-        requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IUser" },
+        createUser: { "in": "body", "name": "createUser", "required": true, "ref": "IUser" },
       };
 
       let validatedArgs: any[] = [];
