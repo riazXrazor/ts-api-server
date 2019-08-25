@@ -1,34 +1,7 @@
-/* tslint:disable */
 import { Controller } from "#controllers/controller.controller";
 import { User } from "#models/user";
-import { ServerError } from "#utils/server-error";
-// import "reflect-metadata";
+import { ServerError, Validate } from "#utils";
 import { Body, Get, Post, Route, SuccessResponse, Tags } from "tsoa";
-import v from "node-input-validator";
-// @ts-ignore
-
-
-function validate(rules: any){
-  return function (_target: any, _propertyName: string, descriptor: TypedPropertyDescriptor<any>) {
-    const method = descriptor.value
-    let result = Reflect.getMetadataKeys(_target);
-    console.log(result)
-    descriptor.value = function(){
-      const context = this;
-      const arg = arguments;
-      let validator = new v(arg[0],rules);
-      return validator.check().then(function (matched: any) {
-        // console.log("valio",target,propertyName,method); 
-        if(matched){
-          method.apply(context,arg, method);
-        } else {
-          return validator.errors
-        }
-      });
-     
-    }
-  }
-}
 
 export interface IUser {
   first_name: string;
@@ -47,17 +20,17 @@ export class UsersController extends Controller {
   @SuccessResponse("201", "Created")
   @Post()
   @Tags("Users")
-  @validate({
-    first_name: 'required',
-    last_name: 'required',
-    email: 'required|email'
+  @Validate({
+    email: "required|email",
+    first_name: "required",
+    last_name: "required",
   })
   public async createUser(@Body() createUser: IUser): Promise<User> {
       const user = new User();
       user.first_name = createUser.first_name;
       user.last_name = createUser.last_name;
       user.email = createUser.email;
-      //user.save();
+      // user.save();
       return user;
   }
 
